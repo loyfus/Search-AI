@@ -5,24 +5,37 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageSwitcher } from "@/components/language-switcher"
 import Link from "next/link"
 import type { Metadata } from "next"
-import { defaultLocale } from "@/lib/i18n"
+import { locales, type Locale, addLocaleToPathname } from "@/lib/i18n"
 import { t } from "@/lib/translations"
 
-export async function generateMetadata(): Promise<Metadata> {
-  const title = t("seo.about.title", defaultLocale)
-  const description = t("seo.about.description", defaultLocale)
+interface AboutPageProps {
+  params: { locale: Locale }
+}
+
+export async function generateStaticParams() {
+  return locales
+    .filter((locale) => locale !== "pt")
+    .map((locale) => ({
+      locale,
+    }))
+}
+
+export async function generateMetadata({ params }: AboutPageProps): Promise<Metadata> {
+  const title = t("seo.about.title", params.locale)
+  const description = t("seo.about.description", params.locale)
 
   return {
     title,
     description,
     alternates: {
-      canonical: "/sobre",
+      canonical: addLocaleToPathname("/sobre", params.locale),
     },
   }
 }
 
-export default function AboutPage() {
-  const locale = defaultLocale
+export default function AboutPage({ params }: AboutPageProps) {
+  const { locale } = params
+  const homeUrl = locale === "pt" ? "/" : `/${locale}`
 
   return (
     <div className="page-container bg-white dark:bg-gray-950 transition-colors duration-300">
@@ -30,13 +43,13 @@ export default function AboutPage() {
 
       <header className="relative z-10 border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm">
         <div className="flex items-center justify-between max-w-7xl mx-auto px-6 py-4">
-          <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+          <Link href={homeUrl} className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">LOYFUS</h1>
           </Link>
           <div className="flex items-center space-x-4">
             <LanguageSwitcher />
             <ThemeToggle />
-            <Link href="/">
+            <Link href={homeUrl}>
               <Button variant="ghost" size="sm">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 {t("nav.back", locale)}
