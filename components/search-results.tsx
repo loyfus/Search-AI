@@ -1,7 +1,5 @@
 "use client"
 
-import type { Locale } from "@/lib/i18n"
-import { t } from "@/lib/translations"
 import { ExternalLink, Sparkles, Tag, Globe, DollarSign, ArrowLeft, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -31,7 +29,6 @@ interface SearchResultsProps {
   onNextPage?: () => void
   onPrevPage?: () => void
   onGoToPage?: (page: number) => void
-  locale: Locale // Nova prop
 }
 
 const PaginationControls = ({
@@ -39,23 +36,21 @@ const PaginationControls = ({
   totalPages,
   onPrevPage,
   onNextPage,
-  locale,
 }: {
   currentPage: number
   totalPages: number
   onPrevPage?: () => void
   onNextPage?: () => void
   onGoToPage?: (page: number) => void
-  locale: Locale
 }) => (
   <div className="flex items-center justify-center space-x-4 py-4">
     <Button variant="outline" onClick={onPrevPage} disabled={currentPage === 1} size="sm" aria-label="Página anterior">
       <ArrowLeft className="w-4 h-4 mr-1" />
-      {t("search.pagination.previous", locale)}
+      Anterior
     </Button>
     <div className="flex items-center space-x-2">
       <span className="text-sm text-gray-600 dark:text-gray-400">
-        {t("search.pagination.page", locale)} {currentPage} de {totalPages}
+        Página {currentPage} de {totalPages}
       </span>
     </div>
     <Button
@@ -65,7 +60,7 @@ const PaginationControls = ({
       size="sm"
       aria-label="Próxima página"
     >
-      {t("search.pagination.next", locale)}
+      Próxima
       <ArrowRight className="w-4 h-4 ml-1" />
     </Button>
   </div>
@@ -81,7 +76,6 @@ export default function SearchResults({
   onNextPage,
   onPrevPage,
   onGoToPage,
-  locale,
 }: SearchResultsProps) {
   if (isLoading) {
     return (
@@ -115,11 +109,10 @@ export default function SearchResults({
           <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
             <Sparkles className="w-8 h-8 text-gray-400 dark:text-gray-500" />
           </div>
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-            {t("search.results.none.title", locale)}
-          </h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Nenhum resultado encontrado</h2>
           <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-            {t("search.results.none.description", locale)}
+            Não encontramos ferramentas que correspondam à sua pesquisa "{query}". Tente usar termos diferentes ou mais
+            específicos.
           </p>
         </CardContent>
       </Card>
@@ -148,13 +141,11 @@ export default function SearchResults({
     <div className="space-y-6">
       <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-4">
         <h2 className="text-sm text-gray-600 dark:text-gray-400">
-          <span className="font-medium text-gray-900 dark:text-gray-100">{totalResults}</span>{" "}
-          {t("search.results.found", locale)}
+          <span className="font-medium text-gray-900 dark:text-gray-100">{totalResults}</span> ferramentas encontradas
           para <span className="font-medium text-gray-900 dark:text-gray-100">"{query}"</span>
           {totalPages > 1 && (
             <span className="ml-2">
-              • {t("search.results.showing", locale)} {(currentPage - 1) * 10 + 1}-
-              {Math.min(currentPage * 10, totalResults)} {t("search.results.of", locale)} {totalResults}
+              • Exibindo {(currentPage - 1) * 10 + 1}-{Math.min(currentPage * 10, totalResults)} de {totalResults}
             </span>
           )}
         </h2>
@@ -167,7 +158,6 @@ export default function SearchResults({
           onPrevPage={onPrevPage}
           onNextPage={onNextPage}
           onGoToPage={onGoToPage}
-          locale={locale}
         />
       )}
 
@@ -210,11 +200,7 @@ export default function SearchResults({
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between mb-3">
-                      <Link
-                        href={locale === "pt" ? `/tools/${tool.slug}` : `/${locale}/tools/${tool.slug}`}
-                        passHref
-                        legacyBehavior
-                      >
+                      <Link href={`/tools/${tool.slug}`} passHref legacyBehavior>
                         <a className="text-xl font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                           <h3 className="inline">{tool.name}</h3> {/* Use h3 for tool name */}
                         </a>
@@ -243,25 +229,21 @@ export default function SearchResults({
                         ))}
                         {tool.categories.length > 3 && (
                           <Badge variant="outline" className="text-xs text-gray-500">
-                            +{tool.categories.length - 3} {t("search.tool.more", locale)}
+                            +{tool.categories.length - 3} mais
                           </Badge>
                         )}
                       </div>
                     )}
 
                     <div className="flex items-center space-x-4">
-                      <Link
-                        href={locale === "pt" ? `/tools/${tool.slug}` : `/${locale}/tools/${tool.slug}`}
-                        passHref
-                        legacyBehavior
-                      >
+                      <Link href={`/tools/${tool.slug}`} passHref legacyBehavior>
                         <Button
                           as="a" // Render as an anchor tag
                           variant="outline"
                           size="sm"
                           className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium"
                         >
-                          {t("search.tool.details", locale)}
+                          Ver detalhes
                         </Button>
                       </Link>
 
@@ -274,7 +256,7 @@ export default function SearchResults({
                           aria-label={`Visitar site oficial de ${tool.name}`}
                         >
                           <Globe className="w-4 h-4 mr-2" />
-                          {t("search.tool.official", locale)}
+                          Site oficial
                         </Button>
                       )}
                     </div>
@@ -304,7 +286,6 @@ export default function SearchResults({
           onPrevPage={onPrevPage}
           onNextPage={onNextPage}
           onGoToPage={onGoToPage}
-          locale={locale}
         />
       )}
     </div>

@@ -9,10 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import SearchResults from "./search-results"
 import { ThemeToggle } from "./theme-toggle"
-import { LanguageSwitcher } from "./language-switcher"
 import Link from "next/link"
-import type { Locale } from "@/lib/i18n"
-import { t } from "@/lib/translations"
 
 interface Tool {
   slug: string
@@ -34,11 +31,7 @@ interface SearchResponse {
   totalPages?: number
 }
 
-interface SearchInterfaceProps {
-  locale: Locale
-}
-
-export default function SearchInterface({ locale }: SearchInterfaceProps) {
+export default function SearchInterface() {
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<Tool[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -138,8 +131,6 @@ export default function SearchInterface({ locale }: SearchInterfaceProps) {
     handleSearch(suggestion, 1)
   }
 
-  const aboutUrl = locale === "pt" ? "/sobre" : `/${locale}/sobre`
-
   return (
     <div className="relative min-h-screen flex flex-col bg-white dark:bg-gray-950 transition-colors duration-300">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:6rem_4rem] opacity-20" />
@@ -160,14 +151,13 @@ export default function SearchInterface({ locale }: SearchInterfaceProps) {
             </h1>
           </div>
           <div className="flex items-center space-x-4">
-            <LanguageSwitcher />
             <ThemeToggle />
-            <Link href={aboutUrl}>
+            <Link href="/sobre">
               <Button
                 variant="ghost"
                 className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
               >
-                {t("nav.about", locale)}
+                Sobre
               </Button>
             </Link>
           </div>
@@ -180,11 +170,12 @@ export default function SearchInterface({ locale }: SearchInterfaceProps) {
           {!hasSearched && (
             <div className="text-center mb-16 space-y-6">
               <div className="space-y-4">
+                {/* H1 for SEO on homepage when no search has been made */}
                 <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
-                  {t("home.title", locale)}
+                  LOYFUS
                 </h1>
                 <p className="text-xl text-gray-600 dark:text-gray-400 max-w-lg mx-auto leading-relaxed">
-                  {t("home.subtitle", locale)}
+                  Plataforma profissional para descoberta e análise de ferramentas de inteligência artificial
                 </p>
               </div>
             </div>
@@ -198,12 +189,12 @@ export default function SearchInterface({ locale }: SearchInterfaceProps) {
                     <div className="relative backdrop-blur-sm bg-white/30 dark:bg-gray-800/30 border border-white/40 dark:border-gray-600/40 rounded-xl overflow-hidden transition-all duration-300 group-hover:border-white/60 dark:group-hover:border-gray-500/60">
                       <Search className="absolute left-3 left-sm-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 w-4 h-4 w-sm-5 h-sm-5 transition-colors duration-300 group-hover:text-gray-700 dark:group-hover:text-gray-200" />
                       <Input
-                        type="search"
-                        placeholder={t("home.search.placeholder", locale)}
+                        type="search" // Use type="search" for better semantics
+                        placeholder="Pesquisar ferramentas de IA..."
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         className="pl-10 pl-sm-12 pr-3 pr-sm-4 py-3 py-sm-4 text-base text-sm-lg bg-transparent border-0 text-gray-800 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-0 transition-all duration-300 w-full"
-                        aria-label={t("home.search.placeholder", locale)}
+                        aria-label="Pesquisar ferramentas de IA"
                       />
                     </div>
                   </div>
@@ -216,13 +207,13 @@ export default function SearchInterface({ locale }: SearchInterfaceProps) {
                       {isLoading ? (
                         <div className="flex items-center justify-center space-x-2">
                           <div className="w-4 h-4 border-2 border-gray-300 dark:border-gray-600 border-t-white dark:border-t-gray-900 rounded-full animate-spin" />
-                          <span className="hidden hidden-sm-inline">{t("home.search.loading", locale)}</span>
+                          <span className="hidden hidden-sm-inline">Pesquisando...</span>
                           <span className="inline inline-sm-hidden">...</span>
                         </div>
                       ) : (
                         <>
-                          <span className="hidden hidden-sm-inline">{t("home.search.button", locale)}</span>
-                          <span className="inline inline-sm-hidden">{t("home.search.button.mobile", locale)}</span>
+                          <span className="hidden hidden-sm-inline">Pesquisar</span>
+                          <span className="inline inline-sm-hidden">Buscar</span>
                         </>
                       )}
                     </Button>
@@ -239,7 +230,7 @@ export default function SearchInterface({ locale }: SearchInterfaceProps) {
                         }
                       }}
                     >
-                      {t("home.explore.button", locale)}
+                      Explorar
                     </Button>
                   </div>
                 </form>
@@ -249,10 +240,10 @@ export default function SearchInterface({ locale }: SearchInterfaceProps) {
                       <AlertCircle className="w-4 h-4 w-sm-5 h-sm-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
                       <div className="flex-1 min-w-0">
                         <p className="text-red-700 dark:text-red-300 text-sm text-sm-base font-medium">
-                          <strong>{t("home.error.title", locale)}</strong> {error}
+                          <strong>Erro:</strong> {error}
                         </p>
                         <p className="text-red-600 dark:text-red-400 text-xs text-sm-sm mt-1 mt-sm-2">
-                          {t("home.error.subtitle", locale)}
+                          Verifique se o backend está rodando ou configure a variável API_BASE_URL.
                         </p>
                       </div>
                     </div>
@@ -261,7 +252,7 @@ export default function SearchInterface({ locale }: SearchInterfaceProps) {
                 {!hasSearched && (
                   <div className="mt-6 mt-sm-7 mt-md-8 pt-4 pt-sm-5 pt-md-6 border-t border-white/20 dark:border-gray-600/30">
                     <h2 className="text-sm text-sm-base text-gray-600 dark:text-gray-400 mb-3 mb-sm-4 font-medium text-center text-sm-left">
-                      {t("home.categories.title", locale)}
+                      Categorias Populares:
                     </h2>
                     <div className="flex flex-wrap gap-2 gap-sm-3 justify-center justify-sm-start">
                       {categories.slice(visibleCategoriesStart, visibleCategoriesStart + 6).map((category, index) => (
@@ -295,7 +286,6 @@ export default function SearchInterface({ locale }: SearchInterfaceProps) {
               onNextPage={handleNextPage}
               onPrevPage={handlePrevPage}
               onGoToPage={handleGoToPage}
-              locale={locale}
             />
           </div>
         )}
@@ -304,22 +294,22 @@ export default function SearchInterface({ locale }: SearchInterfaceProps) {
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              © {new Date().getFullYear()} {t("footer.copyright", locale)}
+              © {new Date().getFullYear()} Loyfus. Plataforma profissional de descoberta de IA.
             </p>
             <div className="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
-              <Link href={locale === "pt" ? "/privacidade" : `/${locale}/privacidade`}>
+              <Link href="/privacidade">
                 <Button variant="ghost" size="sm" className="hover:text-gray-900 dark:hover:text-gray-100">
-                  {t("nav.privacy", locale)}
+                  Privacidade
                 </Button>
               </Link>
-              <Link href={locale === "pt" ? "/termos" : `/${locale}/termos`}>
+              <Link href="/termos">
                 <Button variant="ghost" size="sm" className="hover:text-gray-900 dark:hover:text-gray-100">
-                  {t("nav.terms", locale)}
+                  Termos
                 </Button>
               </Link>
-              <Link href={locale === "pt" ? "/contato" : `/${locale}/contato`}>
+              <Link href="/contato">
                 <Button variant="ghost" size="sm" className="hover:text-gray-900 dark:hover:text-gray-100">
-                  {t("nav.contact", locale)}
+                  Contato
                 </Button>
               </Link>
             </div>
