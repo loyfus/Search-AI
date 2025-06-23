@@ -2,7 +2,6 @@ import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
 import PageTransition from "@/components/page-transition"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -40,7 +39,7 @@ export const metadata: Metadata = {
     siteName: "Loyfus",
     images: [
       {
-        url: `${SITE_URL}/og-image.png`, // Você precisará criar esta imagem
+        url: `${SITE_URL}/og-image.png`,
         width: 1200,
         height: 630,
         alt: "Loyfus - Buscador de Ferramentas de IA",
@@ -53,8 +52,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Loyfus - Buscador Inteligente de Ferramentas de IA",
     description: "Descubra as melhores ferramentas de IA para seus projetos com Loyfus.",
-    images: [`${SITE_URL}/twitter-image.png`], // Você precisará criar esta imagem
-    creator: "@LoyfusAI", // Substitua pelo seu Twitter handle
+    images: [`${SITE_URL}/twitter-image.png`],
+    creator: "@LoyfusAI",
   },
   robots: {
     index: true,
@@ -77,11 +76,8 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" }, // Ajuste conforme o tom escuro do seu tema
-  ],
-  colorScheme: "light dark",
+  themeColor: "#0a0a0a",
+  colorScheme: "dark",
 }
 
 export default function RootLayout({
@@ -91,10 +87,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className={`${inter.className} bg-white dark:bg-gray-950`} style={{ overflow: "hidden auto" }}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <PageTransition>{children}</PageTransition>
-        </ThemeProvider>
+      <body className={`${inter.className} bg-gray-950 text-gray-100`} style={{ overflow: "hidden auto" }}>
+        <PageTransition>{children}</PageTransition>
       </body>
     </html>
   )
