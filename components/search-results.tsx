@@ -36,6 +36,7 @@ const PaginationControls = ({
   totalPages,
   onPrevPage,
   onNextPage,
+  onGoToPage,
 }: {
   currentPage: number
   totalPages: number
@@ -131,7 +132,7 @@ export default function SearchResults({
     }
   }
 
-  const truncateDescription = (text: string, maxLength = 150) => {
+  const truncateDescription = (text: string, maxLength = 250) => {
     if (!text || text.length <= maxLength) return text
     return text.substring(0, maxLength).trim() + "..."
   }
@@ -164,7 +165,7 @@ export default function SearchResults({
         {results.map((tool, index) => (
           <Card
             key={tool.slug}
-            className="border border-gray-800 bg-gray-900 shadow-sm hover:shadow-lg transition-all duration-200 hover:border-gray-700 animate-fade-in group"
+            className="border border-gray-800 bg-gray-900/70 shadow-md hover:shadow-xl transition-all duration-200 hover:border-gray-600 animate-fade-in group backdrop-blur-sm"
             style={{ animationDelay: `${index * 50}ms` }}
           >
             <CardContent className="p-6">
@@ -198,7 +199,7 @@ export default function SearchResults({
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-start justify-between pb-2 border-b border-gray-700 mb-3">
                       <Link href={`/tools/${tool.slug}`} passHref legacyBehavior>
                         <a className="text-xl font-semibold text-gray-100 group-hover:text-blue-400 transition-colors">
                           <h3 className="inline">{tool.name}</h3>
@@ -212,7 +213,7 @@ export default function SearchResults({
                       )}
                     </div>
 
-                    <p className="text-gray-400 leading-relaxed mb-4 text-sm md:text-base">
+                    <p className="text-gray-300 leading-relaxed mb-4 text-sm md:text-base">
                       {truncateDescription(
                         tool.description_en ||
                           tool.description_pt ||
