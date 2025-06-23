@@ -2,9 +2,9 @@ import SearchInterface from "@/components/search-interface"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Loyfus - Buscador Inteligente de Ferramentas de IA",
+  title: "Loyfus - Smart AI Tool Finder",
   description:
-    "Encontre e explore milhares de ferramentas de Inteligência Artificial com o buscador Loyfus. A plataforma líder para descobrir soluções de IA para todas as suas necessidades.",
+    "Find and explore thousands of Artificial Intelligence tools with the Loyfus search engine. The leading platform to discover AI solutions for all your needs.",
   alternates: {
     canonical: "/",
   },

@@ -28,7 +28,7 @@ async function getAllToolsForSitemap(): Promise<Tool[]> {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticPages = ["", "/sobre", "/contato", "/privacidade", "/termos"].map((route) => ({
+  const staticPages = ["", "/about", "/contact", "/privacy", "/terms"].map((route) => ({
     url: `${SITE_URL}${route}`,
     lastModified: new Date().toISOString(),
     changeFrequency: "monthly" as MetadataRoute.Sitemap[0]["changeFrequency"],

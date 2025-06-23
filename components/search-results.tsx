@@ -44,13 +44,13 @@ const PaginationControls = ({
   onGoToPage?: (page: number) => void
 }) => (
   <div className="flex items-center justify-center space-x-4 py-4">
-    <Button variant="outline" onClick={onPrevPage} disabled={currentPage === 1} size="sm" aria-label="Página anterior">
+    <Button variant="outline" onClick={onPrevPage} disabled={currentPage === 1} size="sm" aria-label="Previous page">
       <ArrowLeft className="w-4 h-4 mr-1" />
-      Anterior
+      Previous
     </Button>
     <div className="flex items-center space-x-2">
       <span className="text-sm text-gray-400">
-        Página {currentPage} de {totalPages}
+        Page {currentPage} of {totalPages}
       </span>
     </div>
     <Button
@@ -58,9 +58,9 @@ const PaginationControls = ({
       onClick={onNextPage}
       disabled={currentPage === totalPages}
       size="sm"
-      aria-label="Próxima página"
+      aria-label="Next page"
     >
-      Próxima
+      Next
       <ArrowRight className="w-4 h-4 ml-1" />
     </Button>
   </div>
@@ -109,10 +109,9 @@ export default function SearchResults({
           <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
             <Sparkles className="w-8 h-8 text-gray-500" />
           </div>
-          <h2 className="text-xl font-semibold text-gray-100 mb-2">Nenhum resultado encontrado</h2>
+          <h2 className="text-xl font-semibold text-gray-100 mb-2">No results found</h2>
           <p className="text-gray-400 max-w-md mx-auto">
-            Não encontramos ferramentas que correspondam à sua pesquisa "{query}". Tente usar termos diferentes ou mais
-            específicos.
+            We couldn't find any tools matching your search for "{query}". Try using different or more specific terms.
           </p>
         </CardContent>
       </Card>
@@ -141,11 +140,11 @@ export default function SearchResults({
     <div className="space-y-6">
       <div className="flex items-center justify-between border-b border-gray-800 pb-4">
         <h2 className="text-sm text-gray-400">
-          <span className="font-medium text-gray-100">{totalResults}</span> ferramentas encontradas para{" "}
+          <span className="font-medium text-gray-100">{totalResults}</span> tools found for{" "}
           <span className="font-medium text-gray-100">"{query}"</span>
           {totalPages > 1 && (
             <span className="ml-2">
-              • Exibindo {(currentPage - 1) * 10 + 1}-{Math.min(currentPage * 10, totalResults)} de {totalResults}
+              • Displaying {(currentPage - 1) * 10 + 1}-{Math.min(currentPage * 10, totalResults)} of {totalResults}
             </span>
           )}
         </h2>
@@ -215,7 +214,10 @@ export default function SearchResults({
 
                     <p className="text-gray-400 leading-relaxed mb-4 text-sm md:text-base">
                       {truncateDescription(
-                        tool.description_pt || tool.description_en || tool.description_es || "Descrição não disponível",
+                        tool.description_en ||
+                          tool.description_pt ||
+                          tool.description_es ||
+                          "Description not available",
                       )}
                     </p>
 
@@ -229,7 +231,7 @@ export default function SearchResults({
                         ))}
                         {tool.categories.length > 3 && (
                           <Badge variant="outline" className="text-xs text-gray-500 border-gray-600">
-                            +{tool.categories.length - 3} mais
+                            +{tool.categories.length - 3} more
                           </Badge>
                         )}
                       </div>
@@ -243,7 +245,7 @@ export default function SearchResults({
                           size="sm"
                           className="border-gray-600 text-gray-300 hover:bg-gray-800 font-medium"
                         >
-                          Ver detalhes
+                          View Details
                         </Button>
                       </Link>
 
@@ -253,10 +255,10 @@ export default function SearchResults({
                           size="sm"
                           className="text-blue-400 hover:bg-blue-900/20"
                           onClick={() => window.open(tool.officialUrl, "_blank")}
-                          aria-label={`Visitar site oficial de ${tool.name}`}
+                          aria-label={`Visit official website of ${tool.name}`}
                         >
                           <Globe className="w-4 h-4 mr-2" />
-                          Site oficial
+                          Official Website
                         </Button>
                       )}
                     </div>
@@ -269,7 +271,7 @@ export default function SearchResults({
                     size="sm"
                     className="text-gray-500 hover:text-gray-300 ml-4 opacity-0 group-hover:opacity-100 transition-opacity"
                     onClick={() => window.open(tool.officialUrl, "_blank")}
-                    aria-label={`Abrir site oficial de ${tool.name} em nova aba`}
+                    aria-label={`Open official website of ${tool.name} in new tab`}
                   >
                     <ExternalLink className="w-4 h-4" />
                   </Button>

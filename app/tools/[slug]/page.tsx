@@ -1,5 +1,6 @@
 import ToolDetails from "@/components/tool-details"
 import type { Metadata, ResolvingMetadata } from "next"
+import { notFound } from "next/navigation" // Import notFound
 
 interface ToolPageProps {
   params: {
@@ -12,13 +13,15 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.loyfus.com"
 
 async function getToolData(slug: string) {
   try {
-    const response = await fetch(`${API_BASE_URL}/tools/${slug}`)
+    // Revalidate every 60 seconds to keep data fresh
+    const response = await fetch(`${API_BASE_URL}/tools/${slug}`, { next: { revalidate: 60 } })
     if (!response.ok) {
+      // If tool not found or other API error, return null
       return null
     }
     return response.json()
   } catch (error) {
-    console.error("Failed to fetch tool data for metadata:", error)
+    console.error("Failed to fetch tool data for metadata or page:", error)
     return null
   }
 }
@@ -28,16 +31,16 @@ export async function generateMetadata({ params }: ToolPageProps, parent: Resolv
 
   if (!tool) {
     return {
-      title: "Ferramenta não encontrada",
-      description: "A ferramenta de IA que você está procurando não foi encontrada.",
+      title: "Tool Not Found",
+      description: "The AI tool you are looking for was not found.",
     }
   }
 
-  const title = `${tool.name} - Ferramenta de IA | Loyfus`
+  const title = `${tool.name} - AI Tool | Loyfus`
   const description =
-    tool.description_pt ||
     tool.description_en ||
-    `Descubra mais sobre ${tool.name}, uma poderosa ferramenta de IA. Análises, recursos e como ${tool.name} pode ajudar você.`
+    tool.description_pt ||
+    `Discover more about ${tool.name}, a powerful AI tool. Analysis, features, and how ${tool.name} can help you.`
   const imageUrl = tool.logoBase64?.startsWith("data:")
     ? tool.logoBase64
     : tool.logoBase64
@@ -66,53 +69,42 @@ export async function generateMetadata({ params }: ToolPageProps, parent: Resolv
   }
 }
 
-export default function ToolPage({ params }: ToolPageProps) {
-  // Structured Data for SoftwareApplication
-  const generateStructuredData = async () => {
-    const tool = await getToolData(params.slug)
-    if (!tool) return null
+export default async function ToolPage({ params }: ToolPageProps) {
+  const tool = await getToolData(params.slug)
 
-    const structuredData = {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      name: tool.name,
-      applicationCategory: tool.categories ? tool.categories.join(", ") : "Artificial Intelligence",
-      description: tool.description_pt || tool.description_en || tool.description_es,
-      operatingSystem: "Web-based", // Assuming most are web-based
-      url: tool.officialUrl || `${SITE_URL}/tools/${params.slug}`,
-      image: tool.logoBase64?.startsWith("data:")
-        ? tool.logoBase64
-        : tool.logoBase64
-          ? `data:image/png;base64,${tool.logoBase64}`
-          : undefined,
-      offers: tool.pricingModel
-        ? {
-            "@type": "Offer",
-            priceCurrency: "USD", // Assuming USD, adjust if needed
-            price: tool.pricingModel.toLowerCase() === "free" ? "0" : undefined, // Or a typical price if known
-            category: tool.pricingModel,
-          }
+  if (!tool) {
+    notFound() // Render the 404 page if tool is not found
+  }
+
+  // Structured Data for SoftwareApplication
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: tool.name,
+    applicationCategory: tool.categories ? tool.categories.join(", ") : "Artificial Intelligence",
+    description: tool.description_en || tool.description_pt || tool.description_es,
+    operatingSystem: "Web-based", // Assuming most are web-based
+    url: tool.officialUrl || `${SITE_URL}/tools/${tool.slug}`,
+    image: tool.logoBase64?.startsWith("data:")
+      ? tool.logoBase64
+      : tool.logoBase64
+        ? `data:image/png;base64,${tool.logoBase64}`
         : undefined,
-      // Add aggregateRating if you implement reviews
-    }
-    return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+    offers: tool.pricingModel
+      ? {
+          "@type": "Offer",
+          priceCurrency: "USD", // Assuming USD, adjust if needed
+          price: tool.pricingModel.toLowerCase() === "free" ? "0" : undefined, // Or a typical price if known
+          category: tool.pricingModel,
+        }
+      : undefined,
+    // Add aggregateRating if you implement reviews
   }
 
   return (
     <>
-      {/* Await the promise and render the script tag */}
-      {/* This is a simplified approach. For full SSR of structured data, you might need to pass it as a prop or handle it differently. */}
-      {/* For now, this will execute on the client after hydration. */}
-      {/* A better approach for Next.js 13+ App Router would be to generate this in `generateMetadata` if possible or pass data to client component. */}
-      {/* However, script tags are fine in the component body. */}
-      <ToolDetails slug={params.slug} />
-      {/* 
-        Ideally, the structured data generation should be more tightly coupled with the data fetching
-        of ToolDetails or done server-side. For simplicity in this response, I'm showing it this way.
-        A more robust solution would fetch data once.
-      */}
-      {/* <Suspense fallback={null}>{generateStructuredData()}</Suspense> */}
-      {/* The above Suspense approach is illustrative. The actual implementation of structured data needs careful consideration. */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+      <ToolDetails tool={tool} />
     </>
   )
 }

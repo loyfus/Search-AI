@@ -5,15 +5,15 @@ import Link from "next/link"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Sobre Nós",
+  title: "About Us",
   description:
-    "Conheça a Loyfus, a plataforma líder para descoberta e análise de ferramentas de IA. Nossa missão é simplificar sua busca por soluções de inteligência artificial.",
+    "Learn about Loyfus, the leading platform for AI tool discovery and analysis. Our mission is to simplify your search for artificial intelligence solutions.",
   alternates: {
-    canonical: "/sobre",
+    canonical: "/about",
   },
 }
 
-export default function SobrePage() {
+export default function AboutPage() {
   return (
     <div className="page-container bg-gray-950 transition-colors duration-300">
       {/* Subtle background pattern */}
@@ -28,7 +28,7 @@ export default function SobrePage() {
           <Link href="/">
             <Button variant="ghost" size="sm" className="text-gray-400 hover:text-gray-100">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar
+              Back
             </Button>
           </Link>
         </div>
@@ -39,18 +39,18 @@ export default function SobrePage() {
         <Card className="border-0 bg-transparent shadow-none mb-12">
           <CardContent className="p-0">
             <div className="backdrop-blur-xl bg-gray-900/10 border border-gray-700/30 rounded-3xl p-8 shadow-2xl shadow-black/30">
-              <h1 className="text-4xl font-bold text-gray-100 mb-8">Sobre a Loyfus</h1>
+              <h1 className="text-4xl font-bold text-gray-100 mb-8">About Loyfus</h1>
 
               <div className="prose prose-gray prose-invert max-w-none space-y-6">
                 <p className="text-xl text-gray-300 leading-relaxed">
-                  A Loyfus é uma plataforma profissional dedicada à descoberta e análise de ferramentas de inteligência
-                  artificial, criada para simplificar a busca por soluções de IA adequadas às suas necessidades.
+                  Loyfus is a professional platform dedicated to the discovery and analysis of artificial intelligence
+                  tools, created to simplify your search for AI solutions tailored to your needs.
                 </p>
 
                 <p className="text-gray-300 leading-relaxed">
-                  Em um mundo onde a inteligência artificial está transformando rapidamente todos os setores, encontrar
-                  a ferramenta certa pode ser desafiador. Nossa missão é conectar usuários às melhores soluções de IA
-                  disponíveis, fornecendo informações detalhadas, categorizações precisas e avaliações confiáveis.
+                  In a world where artificial intelligence is rapidly transforming all sectors, finding the right tool
+                  can be challenging. Our mission is to connect users with the best available AI solutions, providing
+                  detailed information, precise categorizations, and reliable reviews.
                 </p>
               </div>
             </div>
@@ -65,10 +65,8 @@ export default function SobrePage() {
                 <div className="w-16 h-16 bg-blue-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <Zap className="w-8 h-8 text-blue-400" />
                 </div>
-                <h2 className="text-lg font-semibold text-gray-100 mb-2">Busca Inteligente</h2>
-                <p className="text-gray-400 text-sm">
-                  Algoritmos avançados para encontrar exatamente o que você precisa
-                </p>
+                <h2 className="text-lg font-semibold text-gray-100 mb-2">Smart Search</h2>
+                <p className="text-gray-400 text-sm">Advanced algorithms to find exactly what you need</p>
               </div>
             </CardContent>
           </Card>
@@ -79,10 +77,8 @@ export default function SobrePage() {
                 <div className="w-16 h-16 bg-green-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <Target className="w-8 h-8 text-green-400" />
                 </div>
-                <h2 className="text-lg font-semibold text-gray-100 mb-2">Categorização Precisa</h2>
-                <p className="text-gray-400 text-sm">
-                  Ferramentas organizadas por categoria para facilitar a descoberta
-                </p>
+                <h2 className="text-lg font-semibold text-gray-100 mb-2">Precise Categorization</h2>
+                <p className="text-gray-400 text-sm">Tools organized by category for easy discovery</p>
               </div>
             </CardContent>
           </Card>
@@ -93,8 +89,8 @@ export default function SobrePage() {
                 <div className="w-16 h-16 bg-purple-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <Users className="w-8 h-8 text-purple-400" />
                 </div>
-                <h2 className="text-lg font-semibold text-gray-100 mb-2">Comunidade Ativa</h2>
-                <p className="text-gray-400 text-sm">Avaliações e feedback da comunidade para decisões informadas</p>
+                <h2 className="text-lg font-semibold text-gray-100 mb-2">Active Community</h2>
+                <p className="text-gray-400 text-sm">Reviews and feedback from the community for informed decisions</p>
               </div>
             </CardContent>
           </Card>
@@ -104,22 +100,22 @@ export default function SobrePage() {
         <Card className="border-0 bg-transparent shadow-none">
           <CardContent className="p-0">
             <div className="backdrop-blur-xl bg-gray-900/10 border border-gray-700/30 rounded-3xl p-8 shadow-2xl shadow-black/30">
-              <h2 className="text-2xl font-bold text-gray-100 mb-6">Nossa Missão</h2>
+              <h2 className="text-2xl font-bold text-gray-100 mb-6">Our Mission</h2>
 
               <div className="space-y-4">
                 <p className="text-gray-300 leading-relaxed">
-                  Democratizar o acesso às ferramentas de inteligência artificial, tornando a descoberta e avaliação de
-                  soluções de IA mais simples e eficiente para profissionais, empresas e entusiastas da tecnologia.
+                  To democratize access to artificial intelligence tools, making the discovery and evaluation of AI
+                  solutions simpler and more efficient for professionals, businesses, and technology enthusiasts.
                 </p>
 
-                <p className="text-gray-300 leading-relaxed">
-                  Acreditamos que a IA deve ser acessível a todos, e nossa plataforma serve como ponte entre a inovação
-                  tecnológica e as necessidades práticas do dia a dia.
+                <p className="text-300 leading-relaxed">
+                  We believe that AI should be accessible to everyone, and our platform serves as a bridge between
+                  technological innovation and everyday practical needs.
                 </p>
               </div>
 
               <div className="mt-8 pt-6 border-t border-gray-700">
-                <p className="text-sm text-gray-400">Fundada em 2025 • Baseada no Brasil</p>
+                <p className="text-sm text-gray-400">Founded in 2025 • Based in Brazil</p>
               </div>
             </div>
           </CardContent>
@@ -131,7 +127,7 @@ export default function SobrePage() {
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex justify-center items-center">
             <p className="text-sm text-gray-400 text-center">
-              © {new Date().getFullYear()} Loyfus. Plataforma profissional de descoberta de IA.
+              © {new Date().getFullYear()} Loyfus. Professional AI discovery platform.
             </p>
           </div>
         </div>

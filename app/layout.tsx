@@ -3,6 +3,8 @@ import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import PageTransition from "@/components/page-transition"
+import { Analytics } from "@vercel/analytics/next" // Import Analytics
+import { Suspense } from "react"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -11,20 +13,20 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.loyfus.com"
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Loyfus - Buscador Inteligente de Ferramentas de IA",
+    default: "Loyfus - Smart AI Tool Finder",
     template: "%s | Loyfus",
   },
   description:
-    "Encontre, compare e analise as melhores ferramentas de Inteligência Artificial com Loyfus. Descubra soluções de IA para otimizar seus projetos e negócios.",
+    "Find, compare, and analyze the best Artificial Intelligence tools with Loyfus. Discover AI solutions to optimize your projects and businesses.",
   keywords: [
-    "ferramentas de IA",
-    "inteligência artificial",
-    "buscador de IA",
+    "AI tools",
+    "artificial intelligence",
+    "AI search engine",
     "Loyfus",
-    "software de IA",
-    "plataformas de IA",
-    "IA para negócios",
-    "IA para produtividade",
+    "AI software",
+    "AI platforms",
+    "AI for business",
+    "AI for productivity",
   ],
   authors: [{ name: "Loyfus Team", url: SITE_URL }],
   creator: "Loyfus Team",
@@ -33,8 +35,8 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Loyfus - Buscador Inteligente de Ferramentas de IA",
-    description: "Descubra as melhores ferramentas de IA para seus projetos com Loyfus.",
+    title: "Loyfus - Smart AI Tool Finder",
+    description: "Discover the best AI tools for your projects with Loyfus.",
     url: SITE_URL,
     siteName: "Loyfus",
     images: [
@@ -42,16 +44,16 @@ export const metadata: Metadata = {
         url: `${SITE_URL}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "Loyfus - Buscador de Ferramentas de IA",
+        alt: "Loyfus - AI Tool Finder",
       },
     ],
-    locale: "pt_BR",
+    locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Loyfus - Buscador Inteligente de Ferramentas de IA",
-    description: "Descubra as melhores ferramentas de IA para seus projetos com Loyfus.",
+    title: "Loyfus - Smart AI Tool Finder",
+    description: "Discover the best AI tools for your projects with Loyfus.",
     images: [`${SITE_URL}/twitter-image.png`],
     creator: "@LoyfusAI",
   },
@@ -86,9 +88,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} bg-gray-950 text-gray-100`} style={{ overflow: "hidden auto" }}>
-        <PageTransition>{children}</PageTransition>
+        <Suspense fallback={<div>Loading...</div>}>
+          <PageTransition>{children}</PageTransition>
+        </Suspense>
+        <Analytics /> {/* Add Analytics component here */}
       </body>
     </html>
   )

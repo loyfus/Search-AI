@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react" // Import useRef
 import { Search, AlertCircle } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -43,6 +43,8 @@ export default function SearchInterface() {
   const [totalResults, setTotalResults] = useState(0)
   const pageSize = 10
 
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null) // Ref for debounce timeout
+
   const categories = [
     "aggregators",
     "ai-detection",
@@ -81,8 +83,14 @@ export default function SearchInterface() {
 
   const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") || "https://ia-back-nu.vercel.app"
 
-  const handleSearch = async (searchQuery: string, page = 1) => {
-    if (!searchQuery.trim()) return
+  const performSearch = async (searchQuery: string, page = 1) => {
+    if (!searchQuery.trim()) {
+      setResults([])
+      setTotalResults(0)
+      setTotalPages(1)
+      setIsLoading(false)
+      return
+    }
     setIsLoading(true)
     if (page === 1) {
       setHasSearched(true)
@@ -95,7 +103,7 @@ export default function SearchInterface() {
       const isJson = res.headers.get("content-type")?.includes("application/json")
       if (!res.ok || !isJson) {
         const message = isJson ? (await res.json()).error : await res.text()
-        throw new Error(message || `Erro ${res.status}`)
+        throw new Error("An unexpected error occurred during search. Please try again.")
       }
       const data: SearchResponse = await res.json()
       setResults(data.results || [])
@@ -104,7 +112,7 @@ export default function SearchInterface() {
       setTotalResults(totalFromAPI)
       setTotalPages(Math.ceil(totalFromAPI / pageSize))
     } catch (err) {
-      console.error("Erro na busca:", err)
+      console.error("Search error:", err)
       setError((err as Error).message)
       setResults([])
     } finally {
@@ -112,22 +120,41 @@ export default function SearchInterface() {
     }
   }
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuery = e.target.value
+    setQuery(newQuery)
+
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current)
+    }
+
+    debounceTimeoutRef.current = setTimeout(() => {
+      performSearch(newQuery, 1)
+    }, 500) // Debounce for 500ms
+  }
+
   const handleNextPage = () => {
-    if (currentPage < totalPages) handleSearch(query, currentPage + 1)
+    if (currentPage < totalPages) performSearch(query, currentPage + 1)
   }
   const handlePrevPage = () => {
-    if (currentPage > 1) handleSearch(query, currentPage - 1)
+    if (currentPage > 1) performSearch(query, currentPage - 1)
   }
   const handleGoToPage = (page: number) => {
-    if (page >= 1 && page <= totalPages && page !== currentPage) handleSearch(query, page)
+    if (page >= 1 && page <= totalPages && page !== currentPage) performSearch(query, page)
   }
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    handleSearch(query, 1)
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current) // Clear any pending debounce
+    }
+    performSearch(query, 1)
   }
   const handleSuggestionClick = (suggestion: string) => {
     setQuery(suggestion)
-    handleSearch(suggestion, 1)
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current)
+    }
+    performSearch(suggestion, 1)
   }
 
   return (
@@ -150,9 +177,9 @@ export default function SearchInterface() {
             </h1>
           </div>
           <div className="flex items-center space-x-4">
-            <Link href="/sobre">
+            <Link href="/about">
               <Button variant="ghost" className="text-gray-400 hover:text-gray-100">
-                Sobre
+                About
               </Button>
             </Link>
           </div>
@@ -167,7 +194,7 @@ export default function SearchInterface() {
               <div className="space-y-4">
                 <h1 className="text-5xl md:text-6xl font-bold text-gray-100 tracking-tight">LOYFUS</h1>
                 <p className="text-xl text-gray-400 max-w-lg mx-auto leading-relaxed">
-                  Plataforma profissional para descoberta e análise de ferramentas de inteligência artificial
+                  Professional platform for discovering and analyzing artificial intelligence tools
                 </p>
               </div>
             </div>
@@ -175,6 +202,13 @@ export default function SearchInterface() {
           <Card className="border-0 bg-transparent shadow-none">
             <CardContent className="p-3 p-sm-4 p-md-5 p-lg-6">
               <div className="backdrop-blur-xl bg-gray-900/10 border border-gray-700/30 rounded-2xl p-4 p-sm-5 p-md-6 p-lg-8 shadow-2xl shadow-black/30 transition-all duration-500 hover:bg-gray-900/15 hover:border-gray-600/40 hover:shadow-3xl w-full">
+                {isLoading && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-950/70 backdrop-blur-sm rounded-2xl z-20 transition-opacity duration-300 opacity-100">
+                    <div className="w-8 h-8 border-4 border-gray-600 border-t-gray-100 rounded-full animate-spin mb-4" />
+                    <p className="text-gray-100 text-lg font-medium">Searching for AI tools...</p>
+                    <p className="text-gray-400 text-sm mt-2">Please wait a moment.</p>
+                  </div>
+                )}
                 <form onSubmit={handleSubmit} className="space-y-4 space-sm-5 space-md-6">
                   <div className="relative group">
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"></div>
@@ -182,11 +216,11 @@ export default function SearchInterface() {
                       <Search className="absolute left-3 left-sm-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 w-sm-5 h-sm-5 transition-colors duration-300 group-hover:text-gray-200" />
                       <Input
                         type="search"
-                        placeholder="Pesquisar ferramentas de IA..."
+                        placeholder="Search AI tools..."
                         value={query}
-                        onChange={(e) => setQuery(e.target.value)}
+                        onChange={handleSearchChange} // Use debounced handler
                         className="pl-10 pl-sm-12 pr-3 pr-sm-4 py-3 py-sm-4 text-base text-sm-lg bg-transparent border-0 text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-0 transition-all duration-300 w-full"
-                        aria-label="Pesquisar ferramentas de IA"
+                        aria-label="Search AI tools"
                       />
                     </div>
                   </div>
@@ -199,13 +233,13 @@ export default function SearchInterface() {
                       {isLoading ? (
                         <div className="flex items-center justify-center space-x-2">
                           <div className="w-4 h-4 border-2 border-gray-600 border-t-gray-900 rounded-full animate-spin" />
-                          <span className="hidden hidden-sm-inline">Pesquisando...</span>
+                          <span className="hidden hidden-sm-inline">Searching...</span>
                           <span className="inline inline-sm-hidden">...</span>
                         </div>
                       ) : (
                         <>
-                          <span className="hidden hidden-sm-inline">Pesquisar</span>
-                          <span className="inline inline-sm-hidden">Buscar</span>
+                          <span className="hidden hidden-sm-inline">Search</span>
+                          <span className="inline inline-sm-hidden">Search</span>
                         </>
                       )}
                     </Button>
@@ -218,11 +252,11 @@ export default function SearchInterface() {
                           const randomCategory = categories[Math.floor(Math.random() * categories.length)]
                           setQuery(randomCategory)
                           setCurrentPage(1)
-                          handleSearch(randomCategory, 1)
+                          performSearch(randomCategory, 1) // Use performSearch
                         }
                       }}
                     >
-                      Explorar
+                      Explore
                     </Button>
                   </div>
                 </form>
@@ -232,10 +266,10 @@ export default function SearchInterface() {
                       <AlertCircle className="w-4 h-4 w-sm-5 h-sm-5 text-red-400 flex-shrink-0 mt-0.5" />
                       <div className="flex-1 min-w-0">
                         <p className="text-red-300 text-sm text-sm-base font-medium">
-                          <strong>Erro:</strong> {error}
+                          <strong>Error:</strong> An unexpected error occurred.
                         </p>
                         <p className="text-red-400 text-xs text-sm-sm mt-1 mt-sm-2">
-                          Verifique se o backend está rodando ou configure a variável API_BASE_URL.
+                          Please try your search again. If the problem persists, contact support.
                         </p>
                       </div>
                     </div>
@@ -244,7 +278,7 @@ export default function SearchInterface() {
                 {!hasSearched && (
                   <div className="mt-6 mt-sm-7 mt-md-8 pt-4 pt-sm-5 pt-md-6 border-t border-gray-600/30">
                     <h2 className="text-sm text-sm-base text-gray-400 mb-3 mb-sm-4 font-medium text-center text-sm-left">
-                      Categorias Populares:
+                      Popular Categories:
                     </h2>
                     <div className="flex flex-wrap gap-2 gap-sm-3 justify-center justify-sm-start">
                       {categories.slice(visibleCategoriesStart, visibleCategoriesStart + 6).map((category, index) => (
@@ -286,7 +320,7 @@ export default function SearchInterface() {
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex justify-center items-center">
             <p className="text-sm text-gray-400 text-center">
-              © {new Date().getFullYear()} Loyfus. Plataforma profissional de descoberta de IA.
+              © {new Date().getFullYear()} Loyfus. Professional AI discovery platform.
             </p>
           </div>
         </div>

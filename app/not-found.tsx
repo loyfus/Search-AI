@@ -5,8 +5,8 @@ import Link from "next/link"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Página não encontrada - 404",
-  description: "A página que você está procurando não foi encontrada. Volte à busca de ferramentas de IA no Loyfus.",
+  title: "Page Not Found - 404",
+  description: "The page you are looking for was not found. Go back to the AI tool search on Loyfus.",
   robots: {
     index: false,
     follow: false,
@@ -28,7 +28,7 @@ export default function NotFound() {
           <Link href="/">
             <Button variant="ghost" size="sm" className="text-gray-400 hover:text-gray-100">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar
+              Back
             </Button>
           </Link>
         </div>
@@ -49,11 +49,11 @@ export default function NotFound() {
 
               {/* Error Message */}
               <div className="mb-8 space-y-4">
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">Página não encontrada</h2>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">Page Not Found</h2>
                 <p className="text-xl text-gray-400 leading-relaxed max-w-lg mx-auto">
-                  Ops! A página que você está procurando não existe ou foi movida para outro local.
+                  Oops! The page you are looking for does not exist or has been moved.
                 </p>
-                <p className="text-gray-500">Que tal voltar à busca e descobrir novas ferramentas de IA?</p>
+                <p className="text-gray-500">How about going back to the search and discovering new AI tools?</p>
               </div>
 
               {/* Action Buttons */}
@@ -61,7 +61,7 @@ export default function NotFound() {
                 <Link href="/">
                   <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3 font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl shadow-lg">
                     <Home className="w-4 h-4 mr-2" />
-                    Voltar ao Início
+                    Back to Home
                   </Button>
                 </Link>
 
@@ -71,14 +71,14 @@ export default function NotFound() {
                     className="backdrop-blur-sm bg-gray-800/20 border border-gray-600/40 text-gray-300 hover:bg-gray-700/30 hover:border-gray-500/60 px-8 py-3 font-medium rounded-xl transition-all duration-300 hover:scale-105"
                   >
                     <Search className="w-4 h-4 mr-2" />
-                    Buscar Ferramentas
+                    Search Tools
                   </Button>
                 </Link>
               </div>
 
               {/* Decorative Elements */}
               <div className="mt-12 pt-8 border-t border-gray-700/30">
-                <p className="text-sm text-gray-500">Código de erro: 404 • Página não encontrada</p>
+                <p className="text-sm text-gray-500">Error code: 404 • Page not found</p>
               </div>
             </div>
           </CardContent>
@@ -90,7 +90,7 @@ export default function NotFound() {
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex justify-center items-center">
             <p className="text-sm text-gray-400 text-center">
-              © {new Date().getFullYear()} Loyfus. Plataforma profissional de descoberta de IA.
+              © {new Date().getFullYear()} Loyfus. Professional AI discovery platform.
             </p>
           </div>
         </div>
