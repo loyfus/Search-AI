@@ -172,9 +172,12 @@ export default function SearchInterface() {
               setError(null)
             }}
           >
-            <h1 className="text-2xl font-bold text-gray-100 tracking-tight hover:opacity-80 transition-opacity">
-              LOYFUS
-            </h1>
+            <div className="flex items-center space-x-2">
+              <img src="/favicon.svg" alt="Loyfus Logo" className="w-8 h-8" />
+              <h1 className="text-2xl font-bold text-gray-100 tracking-tight hover:opacity-80 transition-opacity">
+                LOYFUS
+              </h1>
+            </div>
           </div>
           <div className="flex items-center space-x-4">
             <Link href="/about">
