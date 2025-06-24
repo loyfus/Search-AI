@@ -5,6 +5,7 @@ import "./globals.css"
 import PageTransition from "@/components/page-transition"
 import { Analytics } from "@vercel/analytics/next" // Import Analytics
 import { Suspense } from "react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -93,6 +94,7 @@ export default function RootLayout({
           <PageTransition>{children}</PageTransition>
         </Suspense>
         <Analytics /> {/* Add Analytics component here */}
+        <SpeedInsights /> {/* Add SpeedInsights component here */}
       </body>
     </html>
   )
