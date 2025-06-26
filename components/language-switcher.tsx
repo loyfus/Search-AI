@@ -1,54 +1,31 @@
 "use client"
 
-import { useLocale } from "next-intl"
-import { useRouter, usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Globe } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { usePathname, useRouter } from "next-intl/navigation"
 import { LOCALES } from "@/lib/i18n"
-
-const languages = [
-  { code: "en", name: "English", flag: "🇺🇸" },
-  { code: "pt", name: "Português", flag: "🇧🇷" },
-  { code: "es", name: "Español", flag: "🇪🇸" },
-]
+import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/dropdown-menu"
+import { Globe } from "lucide-react"
 
 export default function LanguageSwitcher() {
-  const locale = useLocale()
-  const router = useRouter()
   const pathname = usePathname()
+  const router = useRouter()
 
-  const stripLocaleFromPath = (path: string) => {
-    const parts = path.split("/")
-    return LOCALES.includes(parts[1] as any) ? `/${parts.slice(2).join("/")}` : path
-  }
-
-  const handleChange = (newLocale: string) => {
-    const cleanPath = stripLocaleFromPath(pathname)
-    const target = newLocale === "en" ? cleanPath || "/" : `/${newLocale}${cleanPath || ""}`
-    router.replace(target)
+  const handleChange = (locale: string) => {
+    router.push(`/${locale}${pathname === "/" ? "" : pathname}`)
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="text-gray-400 hover:text-gray-100">
-          <Globe className="w-4 h-4 mr-2" />
-          {languages.find((l) => l.code === locale)?.flag} {languages.find((l) => l.code === locale)?.name}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="bg-gray-900 border-gray-700">
-        {languages.map((lang) => (
-          <DropdownMenuItem
-            key={lang.code}
-            onClick={() => handleChange(lang.code)}
-            className="text-gray-300 hover:text-gray-100 hover:bg-gray-800 cursor-pointer"
-          >
-            <span className="mr-2">{lang.flag}</span>
-            {lang.name}
-          </DropdownMenuItem>
+    <Menu>
+      <MenuTrigger className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800">
+        <Globe className="w-4 h-4" />
+        <span className="sr-only">Change language</span>
+      </MenuTrigger>
+      <MenuContent align="end">
+        {LOCALES.map((loc) => (
+          <MenuItem key={loc} onSelect={() => handleChange(loc)}>
+            {loc.toUpperCase()}
+          </MenuItem>
         ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </MenuContent>
+    </Menu>
   )
 }

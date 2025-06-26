@@ -1,28 +1,21 @@
-{
-  "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "target": "ES6",
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "paths": {
-      "@/*": ["./*"],
-      "next-intl/navigation": ["./lib/intl-navigation"]
-    }
-  },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
-}
+/>
+
+1. Remova a chave “paths” inteira (a que redirecionava next-intl/navigation).
+2. Remova também qualquer referência a “lib/intl-navigation.ts”.
+
+<QuickEdit file="lib/intl-navigation.ts" />
+
+• Excluir completamente este arquivo (não é mais necessário).
+
+<QuickEdit file="middleware.ts" />
+
+1. Substitua todo o conteúdo por:
+```ts
+import createMiddleware from "next-intl/middleware"
+import { LOCALES } from """"""""""""""""""""""""""""""""""""""""""""""""""""""@"/"l"i"b"/"i"18n"
+
+export default createMiddleware({
+  locales: LOCALES as unknown as string[],
+  defaultLocale: "en",
+  localePrefix: "as-needed",
+})
