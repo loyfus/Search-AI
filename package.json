@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
+    "@radix-ui/react-dropdown-menu": "latest",
     "@radix-ui/react-slot": "^1.0.2",
     "@remix-run/react": "latest",
     "@sveltejs/kit": "latest",
