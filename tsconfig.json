@@ -1,21 +1,33 @@
-/>
+{
+  "compilerOptions": {
+    /* Básico */
+    "target": "ES2020",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "skipLibCheck": true,
 
-1. Remova a chave “paths” inteira (a que redirecionava next-intl/navigation).
-2. Remova também qualquer referência a “lib/intl-navigation.ts”.
+    /* Estrito */
+    "strict": true,
+    "noEmit": true,
+    "isolatedModules": true,
 
-<QuickEdit file="lib/intl-navigation.ts" />
+    /* JSX / React / Next */
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [{ "name": "next" }],
 
-• Excluir completamente este arquivo (não é mais necessário).
+    /* Paths – mantemos apenas o alias padrão "@/..." */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
 
-<QuickEdit file="middleware.ts" />
-
-1. Substitua todo o conteúdo por:
-```ts
-import createMiddleware from "next-intl/middleware"
-import { LOCALES } from """"""""""""""""""""""""""""""""""""""""""""""""""""""@"/"l"i"b"/"i"18n"
-
-export default createMiddleware({
-  locales: LOCALES as unknown as string[],
-  defaultLocale: "en",
-  localePrefix: "as-needed",
-})
+    /* Outras */
+    "esModuleInterop": true,
+    "resolveJsonModule": true
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
