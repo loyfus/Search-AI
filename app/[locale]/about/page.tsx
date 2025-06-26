@@ -1,23 +1,22 @@
-import AboutPageClient from "./AboutPageClient"
 import type { Metadata } from "next"
-import { getTranslations } from "next-intl/server"
+import AboutPageClient from "./AboutPageClient"
 
-interface AboutPageProps {
+interface PageProps {
   params: { locale: string }
 }
 
-export async function generateMetadata({ params: { locale } }: AboutPageProps): Promise<Metadata> {
-  const t = await getTranslations({ locale, namespace: "about" })
+export async function generateMetadata({ params: { locale } }: PageProps): Promise<Metadata> {
+  const titles = {
+    en: "About - Loyfus",
+    pt: "Sobre - Loyfus",
+    es: "Acerca de - Loyfus",
+  }
 
   return {
-    title: t("metaTitle"),
-    description: t("metaDescription"),
-    alternates: {
-      canonical: "/about",
-    },
+    title: titles[locale as keyof typeof titles] || titles.en,
   }
 }
 
-export default function AboutPage({ params: { locale } }: AboutPageProps) {
+export default function AboutPage() {
   return <AboutPageClient />
 }

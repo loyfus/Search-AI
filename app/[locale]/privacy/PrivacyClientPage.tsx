@@ -2,8 +2,8 @@
 
 import { useTranslations } from "next-intl"
 
-export default function TermsPageClient() {
-  const t = useTranslations("terms")
+export default function PrivacyClientPage() {
+  const t = useTranslations("privacy")
 
   return (
     <div className="min-h-screen bg-gray-950 text-gray-100">

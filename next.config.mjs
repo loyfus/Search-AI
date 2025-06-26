@@ -1,6 +1,6 @@
-import createNextIntlPlugin from 'next-intl/plugin'
+import createNextIntlPlugin from 'next-intl/plugin';
 
-const withNextIntl = createNextIntlPlugin('./i18n/request.ts')
+const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -13,9 +13,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  experimental: {
-    optimizePackageImports: ['@vercel/analytics', '@vercel/speed-insights']
-  }
-}
+};
 
-export default withNextIntl(nextConfig)
+export default withNextIntl(nextConfig);

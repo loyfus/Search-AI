@@ -1,11 +1,10 @@
 import ToolDetails from "@/components/tool-details"
 import type { Metadata, ResolvingMetadata } from "next"
-import { notFound } from "next/navigation"
+import { notFound } from "next/navigation" // Import notFound
 
 interface ToolPageProps {
   params: {
     slug: string
-    locale: string
   }
 }
 

@@ -1,23 +1,22 @@
-import PrivacyPageClient from "./PrivacyPageClient"
 import type { Metadata } from "next"
-import { getTranslations } from "next-intl/server"
+import PrivacyClientPage from "./PrivacyClientPage"
 
-interface PrivacyPageProps {
+interface PageProps {
   params: { locale: string }
 }
 
-export async function generateMetadata({ params: { locale } }: PrivacyPageProps): Promise<Metadata> {
-  const t = await getTranslations({ locale, namespace: "privacy" })
+export async function generateMetadata({ params: { locale } }: PageProps): Promise<Metadata> {
+  const titles = {
+    en: "Privacy Policy - Loyfus",
+    pt: "Política de Privacidade - Loyfus",
+    es: "Política de Privacidad - Loyfus",
+  }
 
   return {
-    title: t("metaTitle"),
-    description: t("metaDescription"),
-    alternates: {
-      canonical: "/privacy",
-    },
+    title: titles[locale as keyof typeof titles] || titles.en,
   }
 }
 
-export default function PrivacyPage({ params: { locale } }: PrivacyPageProps) {
-  return <PrivacyPageClient />
+export default function PrivacyPage() {
+  return <PrivacyClientPage />
 }

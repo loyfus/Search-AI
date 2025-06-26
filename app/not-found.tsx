@@ -1,14 +1,19 @@
-"use client"
-
 import { ArrowLeft, Search, Home } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Link } from "@/middleware"
-import { useTranslations } from "next-intl"
+import Link from "next/link"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Page Not Found - 404",
+  description: "The page you are looking for was not found. Go back to the AI tool search on Loyfus.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+}
 
 export default function NotFound() {
-  const tFooter = useTranslations("footer")
-
   return (
     <div className="page-container bg-gray-950 transition-colors duration-300">
       {/* Subtle background pattern */}
@@ -85,7 +90,7 @@ export default function NotFound() {
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex justify-center items-center">
             <p className="text-sm text-gray-400 text-center">
-              {tFooter("copyright", { year: new Date().getFullYear() })}
+              © {new Date().getFullYear()} Loyfus. Professional AI discovery platform.
             </p>
           </div>
         </div>

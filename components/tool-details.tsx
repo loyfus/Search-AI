@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ThemeToggle } from "./theme-toggle"
-import { Link } from "next-intl/navigation"
+import Link from "next/link"
 
 interface Tool {
   slug: string

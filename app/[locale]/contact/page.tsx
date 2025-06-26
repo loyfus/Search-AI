@@ -1,23 +1,22 @@
-import ContactPageClient from "./ContactPageClient"
 import type { Metadata } from "next"
-import { getTranslations } from "next-intl/server"
+import ContactClientPage from "./ContactClientPage"
 
-interface ContactPageProps {
+interface PageProps {
   params: { locale: string }
 }
 
-export async function generateMetadata({ params: { locale } }: ContactPageProps): Promise<Metadata> {
-  const t = await getTranslations({ locale, namespace: "contact" })
+export async function generateMetadata({ params: { locale } }: PageProps): Promise<Metadata> {
+  const titles = {
+    en: "Contact - Loyfus",
+    pt: "Contato - Loyfus",
+    es: "Contacto - Loyfus",
+  }
 
   return {
-    title: t("metaTitle"),
-    description: t("metaDescription"),
-    alternates: {
-      canonical: "/contact",
-    },
+    title: titles[locale as keyof typeof titles] || titles.en,
   }
 }
 
-export default function ContactPage({ params: { locale } }: ContactPageProps) {
-  return <ContactPageClient />
+export default function ContactPage() {
+  return <ContactClientPage />
 }

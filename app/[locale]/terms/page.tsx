@@ -1,23 +1,22 @@
-import TermsPageClient from "./TermsPageClient"
 import type { Metadata } from "next"
-import { getTranslations } from "next-intl/server"
+import TermsPageClient from "./TermsPageClient"
 
-interface TermsPageProps {
+interface PageProps {
   params: { locale: string }
 }
 
-export async function generateMetadata({ params: { locale } }: TermsPageProps): Promise<Metadata> {
-  const t = await getTranslations({ locale, namespace: "terms" })
+export async function generateMetadata({ params: { locale } }: PageProps): Promise<Metadata> {
+  const titles = {
+    en: "Terms of Service - Loyfus",
+    pt: "Termos de Serviço - Loyfus",
+    es: "Términos de Servicio - Loyfus",
+  }
 
   return {
-    title: t("metaTitle"),
-    description: t("metaDescription"),
-    alternates: {
-      canonical: "/terms",
-    },
+    title: titles[locale as keyof typeof titles] || titles.en,
   }
 }
 
-export default function TermsPage({ params: { locale } }: TermsPageProps) {
+export default function TermsPage() {
   return <TermsPageClient />
 }
