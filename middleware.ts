@@ -1,11 +1,15 @@
 import createMiddleware from "next-intl/middleware"
+import { LOCALES } from "@/lib/i18n"
+import NextLink from "next/link"
+import { useRouter, usePathname } from "next/navigation"
 
 export default createMiddleware({
-  locales: ["en", "pt", "es"],
+  locales: LOCALES as unknown as string[],
   defaultLocale: "en",
-  localePrefix: "as-needed", // URLs “/en”, “/pt”, “/es”; default sem prefixo = EN
+  localePrefix: "as-needed",
 })
 
-export const config = {
-  matcher: ["/((?!_next|.*\\..*).*)"], // internacionaliza todas as rotas exceto assets
-}
+// EXPORTS que componentes antigos ainda importam
+export const Link = NextLink
+export { useRouter, usePathname }
+export const routing = { locales: LOCALES }
