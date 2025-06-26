@@ -9,7 +9,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages } from "next-intl/server"
 import { notFound } from "next/navigation"
-import { routing } from "@/middleware"
+import { LOCALES } from "@/lib/i18n"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -19,7 +19,7 @@ interface RootLayoutProps {
 }
 
 export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }))
+  return LOCALES.map((locale) => ({ locale }))
 }
 
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
@@ -114,7 +114,7 @@ export const viewport: Viewport = {
 
 export default async function RootLayout({ children, params: { locale } }: RootLayoutProps) {
   // Ensure that the incoming `locale` is valid
-  if (!routing.locales.includes(locale as any)) {
+  if (!LOCALES.includes(locale as any)) {
     notFound()
   }
 

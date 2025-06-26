@@ -4,7 +4,7 @@ import { ExternalLink, Sparkles, Tag, Globe, DollarSign, ArrowLeft, ArrowRight }
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Link } from "@/middleware"
+import { Link } from "next-intl/navigation"
 import { useTranslations } from "next-intl"
 
 interface Tool {

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import SearchResults from "./search-results"
-import { Link } from "@/middleware"
+import { Link } from "next-intl/navigation"
 import { useTranslations } from "next-intl"
 import LanguageSwitcher from "./language-switcher"
 
