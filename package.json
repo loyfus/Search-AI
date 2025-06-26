@@ -21,6 +21,7 @@
     "lru-cache": "latest",
     "lucide-react": "^0.454.0",
     "next": "14.2.16",
+    "next-intl": "latest",
     "next-themes": "^0.2.1",
     "react": "^18",
     "react-dom": "^18",

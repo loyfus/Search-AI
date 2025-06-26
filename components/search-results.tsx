@@ -4,7 +4,8 @@ import { ExternalLink, Sparkles, Tag, Globe, DollarSign, ArrowLeft, ArrowRight }
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import Link from "next/link"
+import { Link } from "@/middleware"
+import { useTranslations } from "next-intl"
 
 interface Tool {
   slug: string
@@ -36,36 +37,39 @@ const PaginationControls = ({
   totalPages,
   onPrevPage,
   onNextPage,
-  onGoToPage,
 }: {
   currentPage: number
   totalPages: number
   onPrevPage?: () => void
   onNextPage?: () => void
   onGoToPage?: (page: number) => void
-}) => (
-  <div className="flex items-center justify-center space-x-4 py-4">
-    <Button variant="outline" onClick={onPrevPage} disabled={currentPage === 1} size="sm" aria-label="Previous page">
-      <ArrowLeft className="w-4 h-4 mr-1" />
-      Previous
-    </Button>
-    <div className="flex items-center space-x-2">
-      <span className="text-sm text-gray-400">
-        Page {currentPage} of {totalPages}
-      </span>
+}) => {
+  const t = useTranslations("common")
+
+  return (
+    <div className="flex items-center justify-center space-x-4 py-4">
+      <Button variant="outline" onClick={onPrevPage} disabled={currentPage === 1} size="sm" aria-label="Previous page">
+        <ArrowLeft className="w-4 h-4 mr-1" />
+        {t("previous")}
+      </Button>
+      <div className="flex items-center space-x-2">
+        <span className="text-sm text-gray-400">
+          {t("page")} {currentPage} {t("of")} {totalPages}
+        </span>
+      </div>
+      <Button
+        variant="outline"
+        onClick={onNextPage}
+        disabled={currentPage === totalPages}
+        size="sm"
+        aria-label="Next page"
+      >
+        {t("next")}
+        <ArrowRight className="w-4 h-4 ml-1" />
+      </Button>
     </div>
-    <Button
-      variant="outline"
-      onClick={onNextPage}
-      disabled={currentPage === totalPages}
-      size="sm"
-      aria-label="Next page"
-    >
-      Next
-      <ArrowRight className="w-4 h-4 ml-1" />
-    </Button>
-  </div>
-)
+  )
+}
 
 export default function SearchResults({
   results,
@@ -78,6 +82,8 @@ export default function SearchResults({
   onPrevPage,
   onGoToPage,
 }: SearchResultsProps) {
+  const t = useTranslations("common")
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -110,7 +116,7 @@ export default function SearchResults({
           <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
             <Sparkles className="w-8 h-8 text-gray-500" />
           </div>
-          <h2 className="text-xl font-semibold text-gray-100 mb-2">No results found</h2>
+          <h2 className="text-xl font-semibold text-gray-100 mb-2">{t("noResults")}</h2>
           <p className="text-gray-400 max-w-md mx-auto">
             We couldn't find any tools matching your search for "{query}". Try using different or more specific terms.
           </p>
@@ -141,11 +147,12 @@ export default function SearchResults({
     <div className="space-y-6">
       <div className="flex items-center justify-between border-b border-gray-800 pb-4">
         <h2 className="text-sm text-gray-400">
-          <span className="font-medium text-gray-100">{totalResults}</span> tools found for{" "}
+          <span className="font-medium text-gray-100">{totalResults}</span> {t("toolsFound")}{" "}
           <span className="font-medium text-gray-100">"{query}"</span>
           {totalPages > 1 && (
             <span className="ml-2">
-              • Displaying {(currentPage - 1) * 10 + 1}-{Math.min(currentPage * 10, totalResults)} of {totalResults}
+              • {t("displaying")} {(currentPage - 1) * 10 + 1}-{Math.min(currentPage * 10, totalResults)} {t("of")}{" "}
+              {totalResults}
             </span>
           )}
         </h2>
@@ -200,10 +207,10 @@ export default function SearchResults({
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between pb-2 border-b border-gray-700 mb-3">
-                      <Link href={`/tools/${tool.slug}`} passHref legacyBehavior>
-                        <a className="text-xl font-semibold text-gray-100 group-hover:text-blue-400 transition-colors">
-                          <h3 className="inline">{tool.name}</h3>
-                        </a>
+                      <Link href={`/tools/${tool.slug}`}>
+                        <h3 className="text-xl font-semibold text-gray-100 group-hover:text-blue-400 transition-colors">
+                          {tool.name}
+                        </h3>
                       </Link>
                       {tool.pricingModel && (
                         <Badge className={`text-xs ${getPricingColor(tool.pricingModel)}`}>
@@ -239,14 +246,13 @@ export default function SearchResults({
                     )}
 
                     <div className="flex items-center space-x-4">
-                      <Link href={`/tools/${tool.slug}`} passHref legacyBehavior>
+                      <Link href={`/tools/${tool.slug}`}>
                         <Button
-                          as="a"
                           variant="outline"
                           size="sm"
                           className="border-gray-600 text-gray-300 hover:bg-gray-800 font-medium"
                         >
-                          View Details
+                          {t("viewDetails")}
                         </Button>
                       </Link>
 
@@ -259,7 +265,7 @@ export default function SearchResults({
                           aria-label={`Visit official website of ${tool.name}`}
                         >
                           <Globe className="w-4 h-4 mr-2" />
-                          Official Website
+                          {t("officialWebsite")}
                         </Button>
                       )}
                     </div>

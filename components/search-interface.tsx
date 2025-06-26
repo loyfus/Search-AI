@@ -1,14 +1,15 @@
 "use client"
 
 import type React from "react"
-
-import { useState, useEffect, useRef } from "react" // Import useRef
+import { useState, useEffect, useRef } from "react"
 import { Search, AlertCircle } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import SearchResults from "./search-results"
-import Link from "next/link"
+import { Link } from "@/middleware"
+import { useTranslations } from "next-intl"
+import LanguageSwitcher from "./language-switcher"
 
 interface Tool {
   slug: string
@@ -31,6 +32,10 @@ interface SearchResponse {
 }
 
 export default function SearchInterface() {
+  const t = useTranslations("common")
+  const tHome = useTranslations("home")
+  const tNav = useTranslations("navigation")
+
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<Tool[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -43,7 +48,7 @@ export default function SearchInterface() {
   const [totalResults, setTotalResults] = useState(0)
   const pageSize = 10
 
-  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null) // Ref for debounce timeout
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const categories = [
     "aggregators",
@@ -103,7 +108,7 @@ export default function SearchInterface() {
       const isJson = res.headers.get("content-type")?.includes("application/json")
       if (!res.ok || !isJson) {
         const message = isJson ? (await res.json()).error : await res.text()
-        throw new Error("An unexpected error occurred during search. Please try again.")
+        throw new Error(t("unexpectedError"))
       }
       const data: SearchResponse = await res.json()
       setResults(data.results || [])
@@ -130,7 +135,7 @@ export default function SearchInterface() {
 
     debounceTimeoutRef.current = setTimeout(() => {
       performSearch(newQuery, 1)
-    }, 500) // Debounce for 500ms
+    }, 500)
   }
 
   const handleNextPage = () => {
@@ -145,7 +150,7 @@ export default function SearchInterface() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current) // Clear any pending debounce
+      clearTimeout(debounceTimeoutRef.current)
     }
     performSearch(query, 1)
   }
@@ -182,9 +187,10 @@ export default function SearchInterface() {
           <div className="flex items-center space-x-4">
             <Link href="/about">
               <Button variant="ghost" className="text-gray-400 hover:text-gray-100">
-                About
+                {tNav("about")}
               </Button>
             </Link>
+            <LanguageSwitcher />
           </div>
         </div>
       </header>
@@ -195,10 +201,8 @@ export default function SearchInterface() {
           {!hasSearched && (
             <div className="text-center mb-16 space-y-6">
               <div className="space-y-4">
-                <h1 className="text-5xl md:text-6xl font-bold text-gray-100 tracking-tight">LOYFUS</h1>
-                <p className="text-xl text-gray-400 max-w-lg mx-auto leading-relaxed">
-                  Professional platform for discovering and analyzing artificial intelligence tools
-                </p>
+                <h1 className="text-5xl md:text-6xl font-bold text-gray-100 tracking-tight">{tHome("title")}</h1>
+                <p className="text-xl text-gray-400 max-w-lg mx-auto leading-relaxed">{tHome("subtitle")}</p>
               </div>
             </div>
           )}
@@ -208,8 +212,8 @@ export default function SearchInterface() {
                 {isLoading && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-950/70 backdrop-blur-sm rounded-2xl z-20 transition-opacity duration-300 opacity-100">
                     <div className="w-8 h-8 border-4 border-gray-600 border-t-gray-100 rounded-full animate-spin mb-4" />
-                    <p className="text-gray-100 text-lg font-medium">Searching for AI tools...</p>
-                    <p className="text-gray-400 text-sm mt-2">Please wait a moment.</p>
+                    <p className="text-gray-100 text-lg font-medium">{t("searchingMessage")}</p>
+                    <p className="text-gray-400 text-sm mt-2">{t("waitMessage")}</p>
                   </div>
                 )}
                 <form onSubmit={handleSubmit} className="space-y-4 space-sm-5 space-md-6">
@@ -219,11 +223,11 @@ export default function SearchInterface() {
                       <Search className="absolute left-3 left-sm-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 w-sm-5 h-sm-5 transition-colors duration-300 group-hover:text-gray-200" />
                       <Input
                         type="search"
-                        placeholder="Search AI tools..."
+                        placeholder={t("searchPlaceholder")}
                         value={query}
-                        onChange={handleSearchChange} // Use debounced handler
+                        onChange={handleSearchChange}
                         className="pl-10 pl-sm-12 pr-3 pr-sm-4 py-3 py-sm-4 text-base text-sm-lg bg-transparent border-0 text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-0 transition-all duration-300 w-full"
-                        aria-label="Search AI tools"
+                        aria-label={t("searchPlaceholder")}
                       />
                     </div>
                   </div>
@@ -236,13 +240,13 @@ export default function SearchInterface() {
                       {isLoading ? (
                         <div className="flex items-center justify-center space-x-2">
                           <div className="w-4 h-4 border-2 border-gray-600 border-t-gray-900 rounded-full animate-spin" />
-                          <span className="hidden hidden-sm-inline">Searching...</span>
+                          <span className="hidden hidden-sm-inline">{t("searching")}</span>
                           <span className="inline inline-sm-hidden">...</span>
                         </div>
                       ) : (
                         <>
-                          <span className="hidden hidden-sm-inline">Search</span>
-                          <span className="inline inline-sm-hidden">Search</span>
+                          <span className="hidden hidden-sm-inline">{t("search")}</span>
+                          <span className="inline inline-sm-hidden">{t("search")}</span>
                         </>
                       )}
                     </Button>
@@ -255,11 +259,11 @@ export default function SearchInterface() {
                           const randomCategory = categories[Math.floor(Math.random() * categories.length)]
                           setQuery(randomCategory)
                           setCurrentPage(1)
-                          performSearch(randomCategory, 1) // Use performSearch
+                          performSearch(randomCategory, 1)
                         }
                       }}
                     >
-                      Explore
+                      {t("explore")}
                     </Button>
                   </div>
                 </form>
@@ -269,11 +273,9 @@ export default function SearchInterface() {
                       <AlertCircle className="w-4 h-4 w-sm-5 h-sm-5 text-red-400 flex-shrink-0 mt-0.5" />
                       <div className="flex-1 min-w-0">
                         <p className="text-red-300 text-sm text-sm-base font-medium">
-                          <strong>Error:</strong> An unexpected error occurred.
+                          <strong>{t("error")}:</strong> {t("unexpectedError")}
                         </p>
-                        <p className="text-red-400 text-xs text-sm-sm mt-1 mt-sm-2">
-                          Please try your search again. If the problem persists, contact support.
-                        </p>
+                        <p className="text-red-400 text-xs text-sm-sm mt-1 mt-sm-2">{t("tryAgain")}</p>
                       </div>
                     </div>
                   </div>
@@ -281,7 +283,7 @@ export default function SearchInterface() {
                 {!hasSearched && (
                   <div className="mt-6 mt-sm-7 mt-md-8 pt-4 pt-sm-5 pt-md-6 border-t border-gray-600/30">
                     <h2 className="text-sm text-sm-base text-gray-400 mb-3 mb-sm-4 font-medium text-center text-sm-left">
-                      Popular Categories:
+                      {t("popularCategories")}
                     </h2>
                     <div className="flex flex-wrap gap-2 gap-sm-3 justify-center justify-sm-start">
                       {categories.slice(visibleCategoriesStart, visibleCategoriesStart + 6).map((category, index) => (
@@ -323,7 +325,7 @@ export default function SearchInterface() {
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex justify-center items-center">
             <p className="text-sm text-gray-400 text-center">
-              © {new Date().getFullYear()} Loyfus. Professional AI discovery platform.
+              {useTranslations("footer")("copyright", { year: new Date().getFullYear() })}
             </p>
           </div>
         </div>
